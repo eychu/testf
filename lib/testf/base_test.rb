@@ -3,12 +3,12 @@ module Testf
     extend ActiveSupport::DescendantsTracker
 
     class << self
-      attr_reader :tests_set
-      attr_reader :test_results
-      attr_reader :setup
-
       def setup(&block)
-        @setup = block
+        @testf_setup = block
+      end
+
+      def teardown(&block)
+        @testf_teardown = block
       end
 
       def testf(test_name, &block)
@@ -19,8 +19,9 @@ module Testf
       def run
         @tests_set.each do |test_name, block|
           puts test_name
-          @setup.call if @setup
+          @testf_setup.try :call
           block.call
+          @testf_teardown.try :call
         end
 
         @test_results.each do |result|
