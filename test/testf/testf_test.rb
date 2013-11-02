@@ -2,15 +2,15 @@ require 'test_helper'
 
 class SampleTest < Testf::BaseTest
   setup do
-    puts "start"
+    @setup = true
   end
 
-  teardown do
-    puts "end"
-  end
-
-  testf 'assert_true_test' do
+  testf 'assert true test' do
     assert true
+    assert false
   end
 
+  testf 'setup work' do
+    assert @setup
+  end
 end

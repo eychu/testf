@@ -17,26 +17,31 @@ module Testf
       end
 
       def run
+        @resulter = Resulter.new
+
         @tests_set.each do |test_name, block|
-          puts test_name
           @testf_setup.try :call
+          puts "[#{test_name}]".colorize(:yellow)
           block.call
+          puts
           @testf_teardown.try :call
         end
 
-        @test_results.each do |result|
-          print result ? '.' : 'F'
-        end
-        puts
-
+        rep = Reporter.new @tests_set.count,
+                           @resulter.success_count,
+                           @resulter.fail_count
+        rep.show_report
       end
 
       def assert(expression)
-        @test_results ||= []
-        @test_results << !!expression
+        if !!expression
+          @resulter.increment_success
+          print ".".colorize(:green)
+        else
+          @resulter.increment_fail
+          print "F".colorize(:red)
+        end
       end
-
     end
-
   end
 end
