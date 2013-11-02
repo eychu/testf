@@ -3,6 +3,11 @@ module Testf
     extend ActiveSupport::DescendantsTracker
 
     class << self
+
+      def autorun
+        at_exit {BaseTest.descendants.each{ |klass| klass.run }}
+      end
+
       def setup(&block)
         @testf_setup = block
       end
