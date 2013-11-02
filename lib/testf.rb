@@ -1,5 +1,7 @@
-require "testf/version"
+require 'active_support/descendants_tracker'
+require 'active_support/dependencies/autoload'
 
 module Testf
-  # Your code goes here...
+  autoload :BaseTest, 'testf/base_test'
+  at_exit {BaseTest.descendants.each{ |klass| klass.run }}
 end
